@@ -1,0 +1,74 @@
+<?xml version='1.0' standalone='yes'?>
+<!DOCTYPE PLUGIN [
+<!ENTITY name      "coral-tpu-config">
+<!ENTITY author    "benwu">
+<!ENTITY gitURL    "https://github.com/BenWu/unraid-coral-tpu-config">
+<!ENTITY pluginURL "&gitURL;/raw/main/&name;.plg">
+<!ENTITY md5       "223fec3cba7c0a2371d33fc7e14f7ab0">
+<!ENTITY version   "2023.09.22">
+<!ENTITY launch    "Settings/coraltpuconfig">
+<!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
+<!ENTITY plugin    "/boot/config/plugins/&name;">
+]>
+
+<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="list-alt">
+
+<CHANGES>
+
+###2023.09.22
+- Initial release
+
+</CHANGES>
+
+<!-- pre-install -->
+<FILE Run="/bin/bash">
+<INLINE>
+# Remove old 'source' files
+rm -f $(ls &plugin;/&name;*.txz 2>/dev/null|grep -v '&version;')
+</INLINE>
+</FILE>
+
+<!-- source -->
+<FILE Name="&plugin;/&name;-&version;.txz" Run="upgradepkg --install-new">
+<URL>&gitURL;/raw/main/packages/&name;-&version;.txz</URL>
+<MD5>&md5;</MD5>
+</FILE>
+
+<!-- create plugin README.md file -->
+<FILE Name="&emhttp;/README.md">
+<INLINE>
+**coral tpu config**
+
+Plugin to configure coral TPU parameters
+</INLINE>
+</FILE>
+
+<!-- post-install -->
+<FILE Run="/bin/bash">
+<INLINE>
+
+touch "&plugin;/parameters.cfg"
+
+echo ""
+echo "----------------------------------------------------"
+echo " &name; version &version; has been installed."
+echo "----------------------------------------------------"
+echo ""
+</INLINE>
+</FILE>
+
+<!-- uninstall -->
+<FILE Run="/bin/bash" Method="remove">
+<INLINE>
+removepkg &name;-&version;
+rm -rf &emhttp;
+rm -rf &plugin;
+
+echo ""
+echo "----------------------------------------------------"
+echo " &name; version &version; has been uninstalled."
+echo "----------------------------------------------------"
+echo ""
+</INLINE>
+</FILE>
+</PLUGIN>
