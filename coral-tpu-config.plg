@@ -4,7 +4,7 @@
 <!ENTITY author    "benwu">
 <!ENTITY gitURL    "https://github.com/BenWu/unraid-coral-tpu-config">
 <!ENTITY pluginURL "&gitURL;/raw/main/&name;.plg">
-<!ENTITY md5       "358c848e71a4a8fff76137e309dc253c">
+<!ENTITY md5       "5ceb9d016fc823f1f243c330b1fe2411">
 <!ENTITY version   "2023.09.22">
 <!ENTITY launch    "Settings/coraltpuconfig">
 <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
