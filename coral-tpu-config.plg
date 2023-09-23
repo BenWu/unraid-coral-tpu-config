@@ -3,7 +3,7 @@
 <!ENTITY name      "coral-tpu-config">
 <!ENTITY author    "benwu">
 <!ENTITY gitURL    "https://github.com/BenWu/unraid-coral-tpu-config">
-<!ENTITY pluginURL "&gitURL;/raw/main/&name;.plg">
+<!ENTITY pluginURL "https://raw.githubusercontent.com/BenWu/unraid-coral-tpu-config/main/coral-tpu-config.plg">
 <!ENTITY md5       "5ceb9d016fc823f1f243c330b1fe2411">
 <!ENTITY version   "2023.09.22">
 <!ENTITY launch    "Settings/coraltpuconfig">
@@ -48,6 +48,35 @@ Plugin to configure coral TPU parameters
 <INLINE>
 
 touch "&plugin;/parameters.cfg"
+
+echo "Setting parameters:"
+
+PARAM_ALLOW_LIST=(
+  "trip_point0_temp"
+  "trip_point1_temp"
+  "trip_point2_temp"
+  "temp_poll_interval"
+  "hw_temp_warn1"
+  "hw_temp_warn1_en"
+  "hw_temp_warn2"
+  "hw_temp_warn2_en"
+)
+CORAL_DEVICES="$(find /dev/ -maxdepth 1 -type c -name "apex*" -printf '%f\n')"
+
+cat "&plugin;/parameters.cfg" | while IFS== read -r param value; do
+
+  if [ -z $param ]; then :
+  elif [[ ${PARAM_ALLOW_LIST[@]} =~ $param ]]; then
+    echo "Setting $param to $value"
+
+    for device in ${CORAL_DEVICES}; do
+      echo $value > /sys$(udevadm info --query=path --name=/dev/${device})/${param}
+    done
+  else
+    echo "Invalid paramater: $param"
+  fi
+
+done
 
 echo ""
 echo "----------------------------------------------------"
